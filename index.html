@@ -36,24 +36,141 @@
   }
   </script>
 
-  <style>
-    :root{
-      --ink:#0f172a;
-      --muted:#475569;
-      --line:#e2e8f0;
-      --bg:#ffffff;
-      --card:#ffffff;
-      --shadow: 0 10px 30px rgba(2,6,23,.08);
-      --radius: 16px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--ink);
-      background:var(--bg);
-      line-height:1.55;
-    }
+<style>
+:root{
+  --ink:#0f172a;
+  --muted:#475569;
+  --line:#e2e8f0;
+  --bg:#ffffff;
+  --card:#ffffff;
+  --shadow: 0 10px 30px rgba(2,6,23,.08);
+  --radius: 16px;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:var(--ink);
+  background:var(--bg);
+  line-height:1.55;
+}
+
+.wrap{
+  max-width:900px;
+  margin:0 auto;
+  padding:22px 18px 46px;
+}
+
+.hero{
+  border:1px solid var(--line);
+  border-radius: var(--radius);
+  overflow:hidden;
+  box-shadow: var(--shadow);
+}
+
+.hero img.cover{
+  width:100%;
+  height:240px;
+  object-fit:cover;
+  display:block;
+}
+
+.hero .content{
+  padding:18px;
+  background:#fff;
+}
+
+h1{
+  margin:0 0 8px;
+  font-size:26px;
+}
+
+.subtitle{
+  margin:0;
+  color:var(--muted);
+}
+
+.pillrow{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.pill{
+  border:1px solid var(--line);
+  background:#f8fafc;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:13px;
+}
+
+.portrait img{
+  width:130px;
+  height:130px;
+  border-radius:14px;
+  object-fit:cover;
+  border:1px solid var(--line);
+  margin-top:15px;
+}
+
+.btns{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+
+.btn{
+  border:1px solid var(--line);
+  padding:10px 12px;
+  border-radius:12px;
+  text-decoration:none;
+  color:var(--ink);
+}
+
+.btn.primary{
+  background:#0f172a;
+  color:#fff;
+  border-color:#0f172a;
+}
+
+.grid{
+  display:grid;
+  gap:16px;
+  margin-top:20px;
+}
+
+.card{
+  border:1px solid var(--line);
+  border-radius: var(--radius);
+  padding:16px;
+  background:var(--card);
+}
+
+h2{
+  margin:0 0 10px;
+  font-size:18px;
+}
+
+ul{
+  margin:0;
+  padding-left:18px;
+}
+
+.small{
+  color:var(--muted);
+  font-size:14px;
+}
+
+footer{
+  margin-top:24px;
+  color:var(--muted);
+  font-size:13px;
+}
+</style>
     .wrap{max-width:1100px;margin:0 auto;padding:22px 18px 46px;}
     .hero{
       border:1px solid var(--line);
@@ -137,9 +254,6 @@
       background:var(--card);
       box-shadow: 0 6px 18px rgba(2,6,23,.05);
     }
-    <p class="subtitle">
-Directeur Général basé à Paris, spécialisé dans les entreprises technologiques critiques en France.
-</p>
     h2{margin:0 0 10px; font-size:16px;}
     ul{margin:0; padding-left:18px;}
     li{margin:6px 0;}
@@ -157,7 +271,7 @@ Directeur Général basé à Paris, spécialisé dans les entreprises technologi
         <div class="top">
           <div class="idblock">
             <h1>Directeur Général Opérationnel – Management de transition</h1>
-            <p class="subtitle">Télécom B2B • Radiocom professionnelle • Systèmes critiques 24/7 • Défense • Drones</p>
+            <p class="subtitle">Télécom B2B • Radiocoms • Systèmes critiques 24/7 • Défense • Drones • Scale up tech</p>
 
             <div class="pillrow" aria-label="Expertises">
               <span class="pill">Stabilisation & redressement</span>
@@ -223,9 +337,10 @@ Directeur Général basé à Paris, spécialisé dans les entreprises technologi
   <aside class="card">
     <h2>Secteurs d’intervention</h2>
     <ul>
-      <li>Télécommunications B2B et radiocommunication professionnelle</li>
+      <li>Télécommunications B2B et radiocommunications</li>
       <li>Systèmes critiques et infrastructures 24/7</li>
       <li>Technologies duales, défense et drones</li>
+      <li>Scale up tech</li>
     </ul>
   </aside>
 
@@ -248,8 +363,73 @@ Directeur Général basé à Paris, spécialisé dans les entreprises technologi
       <li>Accompagnement transformation stratégique</li>
     </ul>
   </aside>
+<section class="grid" aria-label="Contenu">
+
+  <div class="card">
+    <h2>Ce que je vous apporte</h2>
+    <ul>
+      <li>Remise sous contrôle rapide : cash, priorités, delivery, clients, incidents.</li>
+      <li>Cadre d’exécution : KPI, rituels, ownership, arbitrages Produit/Tech/Business.</li>
+      <li>Organisation 24/7 : run/SRE, qualité, sécurité, continuité de service.</li>
+      <li>Gouvernance : clarification rôles, décisions, gestion tensions fondateur/fonds.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Domaines d’intervention</h2>
+    <ul>
+      <li>Télécommunications B2B</li>
+      <li>Tech</li>
+      <li>Radiocommunications</li>
+      <li>Systèmes critiques et infrastructures</li>
+      <li>Défense / dual-use / drones</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Directeur Général en management de transition à Paris</h2>
+    <p>
+      J’interviens comme Directeur Général opérationnel auprès de PME et scale-ups technologiques confrontées
+      à des enjeux de stabilisation, de transformation ou de croissance sous contrainte.
+      Basé à Paris, j’interviens en France et en Europe selon la mission.
+    </p>
+    <p>
+      Mon champ d’action couvre le pilotage global Produit, Tech, Delivery et Business,
+      avec un objectif clair : rétablir l’exécution, sécuriser les projets critiques
+      et restaurer la confiance clients et investisseurs.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Problématiques traitées</h2>
+    <ul>
+      <li>Stabilisation d’activité sous tension financière ou opérationnelle</li>
+      <li>Repriorisation produit et arbitrage portefeuille projets</li>
+      <li>Remise sous contrôle du delivery et amélioration des SLA</li>
+      <li>Structuration gouvernance fondateur / fonds</li>
+      <li>Organisation Ops / Tech orientée performance et responsabilité</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Exemples de réalisations</h2>
+    <ul>
+      <li>Stabilisation d’une activité et sécurisation des projets critiques.</li>
+      <li>Repriorisation produit et focus revenus / marge.</li>
+      <li>Amélioration SLA, réduction incidents, remise à plat du run.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Contact</h2>
+    <div class="small">
+      Email : <a href="mailto:vincent@delpont.eu">vincent@delpont.eu</a><br>
+      LinkedIn : <a href="https://www.linkedin.com/in/vincent-delpont/" target="_blank" rel="noopener">profil</a>
+    </div>
+  </div>
 
 </section>
+
       </aside>
 
       <div class="card">

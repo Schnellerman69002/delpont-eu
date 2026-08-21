@@ -12,11 +12,15 @@ import androidx.media3.common.Player
 import androidx.media3.common.Timeline
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
+import eu.delpont.morphee.data.EpisodeDownloader
 import eu.delpont.morphee.data.MediaLibrary
 import eu.delpont.morphee.data.PlaybackStateStore
 import eu.delpont.morphee.data.Playlist
 import eu.delpont.morphee.data.PlaylistRepository
+import eu.delpont.morphee.data.PodcastRepository
 import eu.delpont.morphee.data.SettingsRepository
+import eu.delpont.morphee.data.StoredEpisode
+import eu.delpont.morphee.data.Subscription
 import eu.delpont.morphee.data.Track
 import eu.delpont.morphee.data.toMediaItem
 import eu.delpont.morphee.data.toStored
@@ -36,6 +40,7 @@ import kotlinx.coroutines.withContext
 class AppViewModel(app: Application) : AndroidViewModel(app) {
 
     private val playlistRepo = PlaylistRepository(app)
+    private val podcastRepo = PodcastRepository(app)
     private val settingsRepo = SettingsRepository.get(app)
     private val stateStore = PlaybackStateStore(app)
 
@@ -69,8 +74,24 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     private val _durationMs = MutableStateFlow(0L)
     val durationMs: StateFlow<Long> = _durationMs
 
+    // ------------------------------------------------------------------
+    // Podcasts
+    // ------------------------------------------------------------------
+
+    val subscriptions: StateFlow<List<Subscription>> = podcastRepo.subscriptions
+
+    private val _podcastBusy = MutableStateFlow(false)
+    val podcastBusy: StateFlow<Boolean> = _podcastBusy
+
+    private val _podcastMessage = MutableStateFlow<String?>(null)
+    val podcastMessage: StateFlow<String?> = _podcastMessage
+
+    private val _downloadingGuids = MutableStateFlow<Set<String>>(emptySet())
+    val downloadingGuids: StateFlow<Set<String>> = _downloadingGuids
+
     init {
         viewModelScope.launch(Dispatchers.IO) { playlistRepo.load() }
+        viewModelScope.launch(Dispatchers.IO) { podcastRepo.load() }
 
         val token = SessionToken(app, ComponentName(app, PlaybackService::class.java))
         val future = MediaController.Builder(app, token).buildAsync()
@@ -218,6 +239,87 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
 
     fun moveInPlaylist(playlistId: String, from: Int, to: Int) {
         viewModelScope.launch(Dispatchers.IO) { playlistRepo.moveTrack(playlistId, from, to) }
+    }
+
+    // ------------------------------------------------------------------
+    // Podcasts : actions
+    // ------------------------------------------------------------------
+
+    fun subscribePodcast(feedUrl: String) {
+        if (feedUrl.isBlank()) return
+        viewModelScope.launch(Dispatchers.IO) {
+            _podcastBusy.value = true
+            _podcastMessage.value = null
+            runCatching { podcastRepo.subscribe(feedUrl) }
+                .onSuccess { _podcastMessage.value = "Abonné à « ${it.title} »" }
+                .onFailure { _podcastMessage.value = "Flux illisible : ${it.message}" }
+            _podcastBusy.value = false
+        }
+    }
+
+    fun refreshPodcast(subscriptionId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _podcastBusy.value = true
+            runCatching { podcastRepo.refresh(subscriptionId) }
+                .onFailure { _podcastMessage.value = "Actualisation impossible : ${it.message}" }
+            _podcastBusy.value = false
+        }
+    }
+
+    fun unsubscribePodcast(subscriptionId: String) {
+        viewModelScope.launch(Dispatchers.IO) { podcastRepo.unsubscribe(subscriptionId) }
+    }
+
+    fun downloadEpisode(subscription: Subscription, episode: StoredEpisode) {
+        if (episode.guid in _downloadingGuids.value) return
+        viewModelScope.launch(Dispatchers.IO) {
+            _downloadingGuids.value += episode.guid
+            _podcastMessage.value = null
+            runCatching {
+                EpisodeDownloader.download(getApplication(), subscription.title, episode)
+            }.onSuccess { uri ->
+                podcastRepo.setDownloadedUri(subscription.id, episode.guid, uri)
+                _library.value = MediaLibrary.scan(getApplication())
+            }.onFailure {
+                _podcastMessage.value = "Téléchargement impossible : ${it.message}"
+            }
+            _downloadingGuids.value -= episode.guid
+        }
+    }
+
+    fun deleteEpisodeDownload(subscription: Subscription, episode: StoredEpisode) {
+        val uri = episode.downloadedUri ?: return
+        viewModelScope.launch(Dispatchers.IO) {
+            EpisodeDownloader.delete(getApplication(), uri)
+            podcastRepo.setDownloadedUri(subscription.id, episode.guid, null)
+            _library.value = MediaLibrary.scan(getApplication())
+        }
+    }
+
+    fun playEpisode(episode: StoredEpisode) {
+        val uri = episode.downloadedUri ?: return
+        val c = controller ?: return
+        c.setMediaItems(
+            listOf(
+                MediaItem.Builder()
+                    .setMediaId(uri)
+                    .setUri(uri)
+                    .setMediaMetadata(
+                        androidx.media3.common.MediaMetadata.Builder()
+                            .setTitle(episode.title)
+                            .build(),
+                    )
+                    .build(),
+            ),
+            0,
+            0L,
+        )
+        c.prepare()
+        c.play()
+    }
+
+    fun clearPodcastMessage() {
+        _podcastMessage.value = null
     }
 
     // ------------------------------------------------------------------

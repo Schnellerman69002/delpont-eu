@@ -6,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.QueueMusic
 import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.LibraryMusic
+import androidx.compose.material.icons.filled.Podcasts
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -26,6 +27,7 @@ private enum class Tab(val label: String, val icon: ImageVector) {
     PLAYER("Lecture", Icons.Filled.Bedtime),
     PLAYLISTS("Playlists", Icons.AutoMirrored.Filled.QueueMusic),
     LIBRARY("Bibliothèque", Icons.Filled.LibraryMusic),
+    PODCASTS("Podcasts", Icons.Filled.Podcasts),
 }
 
 @Composable
@@ -61,6 +63,7 @@ fun AppUi(viewModel: AppViewModel) {
             Tab.PLAYER.name -> HomeScreen(viewModel, contentModifier)
             Tab.PLAYLISTS.name -> PlaylistsScreen(viewModel, contentModifier)
             Tab.LIBRARY.name -> LibraryScreen(viewModel, contentModifier)
+            Tab.PODCASTS.name -> PodcastsScreen(viewModel, contentModifier)
         }
     }
 }

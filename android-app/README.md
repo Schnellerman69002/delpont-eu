@@ -22,8 +22,15 @@ depuis le bouton Play d'une télécommande Bluetooth, téléphone verrouillé.
 - **Bibliothèque locale** : analyse des fichiers audio du téléphone via
   MediaStore, avec filtres Musique / Podcasts (détection par le tag podcast
   ou par un dossier contenant « podcast »).
-- **Playlists** : création, suppression, ajout de pistes, réordonnancement,
-  mélange musiques + podcasts possible.
+- **Playlists** : création, suppression, ajout de pistes (une par une ou en
+  sélection multiple), réordonnancement, mélange musiques + podcasts possible.
+- **Abonnements podcasts** (onglet Podcasts) : abonnement par URL de flux
+  RSS, actualisation des épisodes, téléchargement manuel d'un épisode dans
+  le dossier public `Podcasts/` du téléphone (il apparaît alors dans la
+  Bibliothèque et peut rejoindre une playlist), suppression du fichier
+  après écoute, désabonnement. Le téléchargement s'effectue application
+  ouverte (pas de téléchargement automatique en arrière-plan dans cette
+  version).
 - **Timer de sommeil** : durée réglable par pas de 5 min, armement
   automatique à chaque lecture (désactivable), prolongation « +5 min »,
   fondu de volume configurable.

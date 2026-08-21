@@ -206,6 +206,12 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(Dispatchers.IO) { playlistRepo.addTrack(playlistId, track.toStored()) }
     }
 
+    fun addAllToPlaylist(playlistId: String, tracks: List<Track>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            playlistRepo.addTracks(playlistId, tracks.map { it.toStored() })
+        }
+    }
+
     fun removeFromPlaylist(playlistId: String, index: Int) {
         viewModelScope.launch(Dispatchers.IO) { playlistRepo.removeTrack(playlistId, index) }
     }

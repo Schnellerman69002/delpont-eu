@@ -47,10 +47,16 @@ class PlaylistRepository(context: Context) {
     }
 
     suspend fun addTrack(playlistId: String, track: StoredTrack) {
+        addTracks(playlistId, listOf(track))
+    }
+
+    /** Ajoute plusieurs pistes d'un coup, en ignorant celles déjà présentes. */
+    suspend fun addTracks(playlistId: String, tracks: List<StoredTrack>) {
         update { list ->
             list.map {
-                if (it.id == playlistId && it.tracks.none { t -> t.uri == track.uri }) {
-                    it.copy(tracks = it.tracks + track)
+                if (it.id == playlistId) {
+                    val existing = it.tracks.map { t -> t.uri }.toSet()
+                    it.copy(tracks = it.tracks + tracks.filter { t -> t.uri !in existing })
                 } else it
             }
         }
